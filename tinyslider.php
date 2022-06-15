@@ -19,6 +19,11 @@ function tinys_load_textdomain(){
 }
 add_action( 'plugin_loaded', 'tinys_load_textdomain' );
 
+// Crop image size
+function tinys_init(){
+    add_image_size( 'tiny-slider', 800, 600, true );
+}
+add_action( 'init', 'tinys_init' );
 
 // CSS and JS
 function tinys_assets(){
@@ -28,6 +33,7 @@ function tinys_assets(){
 }
 add_action( 'wp_enqueue_scripts', 'tinys_assets' );
 
+// Tslider Shortcode
 function tinys_shortcode_tslider( $args, $content ) {
     $defaults = array(
         'width' => 800,
@@ -36,19 +42,36 @@ function tinys_shortcode_tslider( $args, $content ) {
     );
     $attributes = shortcode_atts( $defaults, $args );
     $content = do_shortcode( $content );
-
-    $shortcode_output = '
-        <div id="{$attributes[id]}" style="width:{$attributes[width]}; height={$attributes[height]}">
+    $shortcode_output = <<<EOD
+        <div id="{$attributes['id']}" style="width:{$attributes['width']}; height={$attributes['height']}">
             <div class="slider">
                 {$content}
             </div>
         </div>
-    ';
+    EOD;
 
     return $shortcode_output;
 }
 add_shortcode( 'tslider', 'tinys_shortcode_tslider' );
 
+function tinys_shortcode_tslide( $args ){
+    $defaults = array(
+        'caption' => '',
+        'id' => '',
+        'size' => 'tiny-slider' 
+    );
+    $attributes = shortcode_atts( $defaults, $args );
+    $image_src = wp_get_attachment_image_src( $attributes['id'], $attributes['size'] );
+    $shortcode_output = <<<EOD
+        <div class="slide">
+            <p><img src="{$image_src[0]}" alt="{$attributes['caption']}"></p>
+            <p>{$attributes['caption']}</p>
+        </div>
+    EOD;
+
+    return $shortcode_output;
+}
+add_shortcode( 'tslide', 'tinys_shortcode_tslide' );
 // 11.00 mins
 
 
