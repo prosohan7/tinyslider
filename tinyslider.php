@@ -17,7 +17,7 @@
 function tinys_load_textdomain(){
     load_plugin_textdomain( 'tinyslider', 'false'. dirname(__FILE__)."/languages" );
 }
-add_action( 'plugin_loaded', 'tinys_load_textdomain' );
+add_action( 'plugins_loaded', 'tinys_load_textdomain' );
 
 // Crop image size
 function tinys_init(){
